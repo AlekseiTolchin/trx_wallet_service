@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi_pagination import add_pagination
 
 from app.routers import wallets
 
@@ -12,3 +13,4 @@ async def welcome() -> dict:
 
 
 app.include_router(wallets.router)
+add_pagination(app)

@@ -1,7 +1,9 @@
-from typing import Annotated
+from typing import Annotated, List
 import asyncio
 
 from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi_pagination import Page, Params
+from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import insert, select, update
 from fastapi import APIRouter, Depends, HTTPException, status
 from tronpy.async_tron import AsyncTron
@@ -59,3 +61,9 @@ async def wallet_info(db: Annotated[AsyncSession, Depends(get_db)], wallet: Wall
 
     except AddressNotFound:
         raise HTTPException(status_code=404, detail="Wallet address not found")
+
+
+@router.get('/wallets', response_model=Page[WalletInfoResponse])
+async def get_wallet_list(db: Annotated[AsyncSession, Depends(get_db)], params: Params = Depends()):
+    wallet_queries = select(WalletQuery)
+    return await paginate(db, wallet_queries, params)
