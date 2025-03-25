@@ -6,3 +6,6 @@ asyncpg==0.30.0
 tronpy==0.5.0
 environs==14.1.1
 fastapi-pagination[sqlalchemy]
+pytest==8.3.5
+pytest-asyncio==0.26.0
+aiosqlite==0.21.0

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi_pagination import add_pagination
 
-from app.routers import wallets
+from app.routes import wallets
 
 
 app = FastAPI()

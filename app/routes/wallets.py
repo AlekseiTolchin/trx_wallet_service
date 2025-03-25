@@ -1,4 +1,4 @@
-from typing import Annotated, List
+from typing import Annotated
 import asyncio
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -40,7 +40,7 @@ async def get_wallet_info(wallet_address: str):
     }
 
 
-@router.post('/wallets')
+@router.post('/wallets', status_code=status.HTTP_201_CREATED)
 async def wallet_info(db: Annotated[AsyncSession, Depends(get_db)], wallet: WalletAddress):
     try:
         wallet_params = await get_wallet_info(wallet.address)
