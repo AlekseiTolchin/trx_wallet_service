@@ -31,6 +31,12 @@ docker-compose build
 docker-compose up
 ```
 
+Запустить тесты:
+
+```
+docker-compose exec web pytest
+```
+
 Ссылки для тестирования:
 
 http://127.0.0.1:8000/docs/ - `документация API`  
