@@ -43,8 +43,8 @@ async def get_wallet_info(wallet_address: WalletAddress) -> WalletInfoResponse:
     )
 
 
-@router.post('/wallets', status_code=status.HTTP_200_OK)
-async def wallet_info(
+@router.post('/wallets/info', status_code=status.HTTP_200_OK)
+async def create_wallet_info(
         db: Annotated[AsyncSession, Depends(get_db)],
         wallet_address: WalletAddress) -> dict:
     try:
@@ -78,7 +78,7 @@ async def wallet_info(
             detail='Invalid wallet address format')
 
 
-@router.get('/wallets', response_model=Page[WalletInfoResponse])
+@router.get('/wallets/list', response_model=Page[WalletInfoResponse])
 async def get_wallet_list(
         db: Annotated[AsyncSession, Depends(get_db)],
         params: Params = Depends()) -> Page[WalletInfoResponse]:

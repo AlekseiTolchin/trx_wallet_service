@@ -47,7 +47,7 @@ async def mock_get_wallet_info(
 
 
 @pytest.mark.asyncio
-async def test_create_wallet(
+async def test_create_wallet_info(
         test_client,
         monkeypatch,
         async_session: AsyncSession,
@@ -58,7 +58,7 @@ async def test_create_wallet(
     )
 
     response = test_client.post(
-        '/wallets',
+        '/wallets/info',
         json={'address': 'TZ4UXDV5ZhNW7fb2AMSbgfAEZ7hWsnYS2g'}
     )
 
