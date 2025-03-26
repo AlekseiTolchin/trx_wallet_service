@@ -12,7 +12,7 @@ engine = create_async_engine(DATABASE_URL, echo=True)
 TestingSessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope='session')
 async def create_test_database():
 
     async with engine.begin() as conn:

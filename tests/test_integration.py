@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.main import app as fastapi_app
 from app.models.wallets import WalletQuery
 from app.backend.db_depends import get_db
+from app.schemas import WalletInfoResponse, WalletAddress
 
 
 @pytest.fixture
@@ -35,30 +36,34 @@ def test_client(test_app):
     return TestClient(test_app)
 
 
-async def mock_get_wallet_info(wallet_address: str):
-    return {
-        'balance': 1000,
-        'bandwidth': 2000,
-        'energy': 3000,
-    }
+async def mock_get_wallet_info(wallet_address: WalletAddress) -> WalletInfoResponse:
+    return WalletInfoResponse(
+        address='TZ4UXDV5ZhNW7fb2AMSbgfAEZ7hWsnYS2g',
+        balance=1000,
+        bandwidth=2000,
+        energy=3000,
+    )
 
 
 @pytest.mark.asyncio
 async def test_create_wallet(test_client, monkeypatch, async_session: AsyncSession, create_test_database):
     monkeypatch.setattr('app.routes.wallets.get_wallet_info', mock_get_wallet_info)
 
-    response = test_client.post('/wallets', json={'address': "TRxxxxxxxxxxxxxxxxxxxxxxxxxxx"})
+    response = test_client.post('/wallets', json={'address': 'TZ4UXDV5ZhNW7fb2AMSbgfAEZ7hWsnYS2g'})
 
-    assert response.status_code == 201
+    assert response.status_code == 200
     assert response.json() == {
-        'status_code': 201,
-        'transaction': 'Successful'
+        'wallet_address': 'TZ4UXDV5ZhNW7fb2AMSbgfAEZ7hWsnYS2g',
+        'wallet_balance': 1000,
+        'wallet_bandwidth': 2000,
+        'wallet_energy': 3000,
+        'status_code': 200,
     }
 
     result = await async_session.execute(select(WalletQuery))
     wallet = result.scalars().first()
 
-    assert wallet is not None
+    assert wallet.address == 'TZ4UXDV5ZhNW7fb2AMSbgfAEZ7hWsnYS2g'
     assert wallet.balance == 1000
     assert wallet.bandwidth == 2000
     assert wallet.energy == 3000
