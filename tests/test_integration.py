@@ -36,7 +36,8 @@ def test_client(test_app):
     return TestClient(test_app)
 
 
-async def mock_get_wallet_info(wallet_address: WalletAddress) -> WalletInfoResponse:
+async def mock_get_wallet_info(
+        wallet_address: WalletAddress) -> WalletInfoResponse:
     return WalletInfoResponse(
         address='TZ4UXDV5ZhNW7fb2AMSbgfAEZ7hWsnYS2g',
         balance=1000,
@@ -46,10 +47,20 @@ async def mock_get_wallet_info(wallet_address: WalletAddress) -> WalletInfoRespo
 
 
 @pytest.mark.asyncio
-async def test_create_wallet(test_client, monkeypatch, async_session: AsyncSession, create_test_database):
-    monkeypatch.setattr('app.routes.wallets.get_wallet_info', mock_get_wallet_info)
+async def test_create_wallet(
+        test_client,
+        monkeypatch,
+        async_session: AsyncSession,
+        create_test_database) -> None:
+    monkeypatch.setattr(
+        'app.routes.wallets.get_wallet_info',
+        mock_get_wallet_info,
+    )
 
-    response = test_client.post('/wallets', json={'address': 'TZ4UXDV5ZhNW7fb2AMSbgfAEZ7hWsnYS2g'})
+    response = test_client.post(
+        '/wallets',
+        json={'address': 'TZ4UXDV5ZhNW7fb2AMSbgfAEZ7hWsnYS2g'}
+    )
 
     assert response.status_code == 200
     assert response.json() == {

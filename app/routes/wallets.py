@@ -1,14 +1,14 @@
 from typing import Annotated
 import asyncio
 
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi_pagination import Page, Params
 from fastapi_pagination.ext.sqlalchemy import paginate
-from sqlalchemy import insert, select, update
-from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import insert, select
+from sqlalchemy.ext.asyncio import AsyncSession
 from tronpy.async_tron import AsyncTron
 from tronpy.providers.async_http import AsyncHTTPProvider
-from tronpy.exceptions import AddressNotFound, BadAddress, ApiError
+from tronpy.exceptions import AddressNotFound, BadAddress
 
 from app.backend.db_depends import get_db
 from app.models.wallets import WalletQuery
@@ -42,6 +42,7 @@ async def get_wallet_info(wallet_address: WalletAddress) -> WalletInfoResponse:
         energy=energy
     )
 
+
 @router.post('/wallets', status_code=status.HTTP_200_OK)
 async def wallet_info(
         db: Annotated[AsyncSession, Depends(get_db)],
@@ -68,9 +69,13 @@ async def wallet_info(
         }
 
     except AddressNotFound:
-        raise HTTPException(status_code=404, detail='Wallet address not found')
+        raise HTTPException(
+            status_code=404,
+            detail='Wallet address not found')
     except BadAddress:
-        raise HTTPException(status_code=400, detail='Invalid wallet address format')
+        raise HTTPException(
+            status_code=400,
+            detail='Invalid wallet address format')
 
 
 @router.get('/wallets', response_model=Page[WalletInfoResponse])

@@ -6,7 +6,9 @@ from app.models.wallets import WalletQuery
 
 
 @pytest.mark.asyncio
-async def test_insert_wallet_query(async_session: AsyncSession, create_test_database):
+async def test_insert_wallet_query(
+        async_session: AsyncSession,
+        create_test_database) -> None:
     wallet_data = {
         'address': 'TZ4UXDV5ZhNW7fb2AMSbgfAEZ7hWsnYS2g',
         'balance': 1000,

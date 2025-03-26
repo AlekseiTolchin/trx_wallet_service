@@ -147,3 +147,4 @@ cython_debug/
 data.json
 staticfiles/
 tron.db
+test.db
